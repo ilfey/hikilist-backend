@@ -12,4 +12,5 @@ class AnimeUserRateSerializer(serializers.ModelSerializer):
 class AnimeUserRateViewSet(viewsets.ModelViewSet):
   queryset = models.AnimeUserRate.objects.all()
   serializer_class = AnimeUserRateSerializer
-  filter_backends = [filters.SearchFilter]
+  # filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+  # search_fields = ()

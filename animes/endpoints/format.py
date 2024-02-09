@@ -12,4 +12,5 @@ class FormatSerializer(serializers.ModelSerializer):
 class FormatViewSet(viewsets.ModelViewSet):
   queryset = models.Format.objects.all()
   serializer_class = FormatSerializer
-  filter_backends = [filters.SearchFilter]
+  filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+  search_fields = ("id", "title",)

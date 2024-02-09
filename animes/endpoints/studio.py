@@ -12,4 +12,5 @@ class StudioSerializer(serializers.ModelSerializer):
 class StudioViewSet(viewsets.ModelViewSet):
   queryset = models.Studio.objects.all()
   serializer_class = StudioSerializer
-  filter_backends = [filters.SearchFilter]
+  filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+  search_fields = ("id", "title",)

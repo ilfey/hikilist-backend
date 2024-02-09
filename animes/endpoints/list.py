@@ -12,4 +12,5 @@ class ListSerializer(serializers.ModelSerializer):
 class ListViewSet(viewsets.ModelViewSet):
   queryset = models.List.objects.all()
   serializer_class = ListSerializer
-  filter_backends = [filters.SearchFilter]
+  filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+  search_fields = ("id", "title",)
