@@ -42,6 +42,15 @@ class Anime(models.Model):
     studios = models.ManyToManyField(Studio, blank=True)
     related = models.ManyToManyField("self", blank=True)
 
+    @property
+    def status(self):
+        if self.episodes_released == 0:
+            return "Анонсировано"
+        elif self.episodes == self.episodes_released:
+            return "Вышло"
+        elif self.episodes != 0 and self.episodes_released != 0:
+            return "Выходит"
+
     def __str__(self):
         return self.title
 
