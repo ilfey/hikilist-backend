@@ -17,7 +17,7 @@ services:
       - "${DB_HOST_PORT}:5432"
 
   web:
-    build: .
+    build: app
     
     env_file:
       - path: .env.web
