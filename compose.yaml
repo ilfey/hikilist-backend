@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  db:
+    image: postgres:16-alpine
+
+    volumes:
+      - "${DB_DATA_PATH}:/etc/pgdata"
+
+    environment:
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      PGDATA: $PGDATA
+
+    ports:
+      - "${DB_HOST_PORT}:5432"
+
+  web:
+    build: .
+    
+    env_file:
+      - path: .env.web
+
+    ports:
+      - "${WEB_HOST_PORT}:8000"
+
+    volumes:
+      - "${WEB_MEDIA_PATH}:/srv/media"
+      - "${WEB_ASSETS_PATH}:/srv/assets"
+    
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - "${WEB_MEDIA_PATH}:/var/www/hikilist/media"
+      - "${WEB_ASSETS_PATH}:/var/www/hikilist/assets"
+    ports:
+      - 1337:80
+    depends_on:
+      - web

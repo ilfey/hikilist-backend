@@ -1,0 +1,28 @@
+version: 3
+
+tasks:
+  predev:
+    desc: Setting up backend development environment
+    cmds:
+      - py -m venv venv
+      - pip install -r requirements.txt
+
+  start:
+    desc: Start docker compose
+    cmds:
+      - docker-compose up
+  
+  start-detach:
+    desc: Start docker compose
+    cmds:
+      - docker-compose up --build -d
+  
+  build:
+    desc: Build docker compose
+    cmds:
+      - docker-compose build
+  
+  start-local:
+    desc: Start backend
+    cmds:
+      - py manage.py runserver

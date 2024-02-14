@@ -10,7 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from environs import Env
+from dotenv import load_dotenv
+from dotenv import find_dotenv
 from pathlib import Path
+
+env = Env()
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,14 +26,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zn8wx_5t3s)=p-@zif)ygk42a@j0j*-kb3m7hh@6@7)jv0qgk8'
+SECRET_KEY = env("SECRET", "django-insecure-zn8wx_5t3s)=p-@zif)ygk42a@j0j*-kb3m7hh@6@7)jv0qgk8")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", True)
 
-ALLOWED_HOSTS = [
-    "*"
-]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ("*"))
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -39,10 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts.apps.AccountsConfig',
-    'animes.apps.AnimesConfig',
+    
     'rest_framework',
     'django_filters',
+    'corsheaders',
+    
+    'accounts.apps.AccountsConfig',
+    'animes.apps.AnimesConfig',
 ]
 
 REST_FRAMEWORK = {
@@ -57,6 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -84,12 +97,15 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": env("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": env("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": env("SQL_USER", "admin"),
+        "PASSWORD": env("SQL_PASSWORD", "admin"),
+        "HOST": env("SQL_HOST", "localhost"),
+        "PORT": env("SQL_PORT", "5432"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -126,6 +142,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "assets"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
