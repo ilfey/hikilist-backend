@@ -9,6 +9,10 @@ ENV PYTHONUNBUFFERED 1
 
 COPY . .
 
+COPY ./entrypoint.sh .
+
+RUN chmod +x /srv/entrypoint.sh
+
 RUN pip3 install -r requirements.txt --no-cache-dir
 
 RUN python3 manage.py migrate --run-syncdb --noinput
