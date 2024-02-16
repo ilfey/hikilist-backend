@@ -11,6 +11,8 @@ COPY . .
 
 COPY ./entrypoint.sh .
 
+RUN dos2unix /srv/entrypoint.sh
+
 RUN chmod +x /srv/entrypoint.sh
 
 RUN pip3 install -r requirements.txt --no-cache-dir
