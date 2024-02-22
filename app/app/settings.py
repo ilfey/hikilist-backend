@@ -31,12 +31,34 @@ SECRET_KEY = env("SECRET", "django-insecure-zn8wx_5t3s)=p-@zif)ygk42a@j0j*-kb3m7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", True)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ("*"))
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ['127.0.0.1', 'localhost',])
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
+# CORS
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = env.list("ALLOWED_ORIGINS", ['http://localhost:5173', 'http://127.0.0.1:5173',])
 
+CORS_ORIGIN_ALLOW_ALL = env.bool("ORIGIN_ALLOW_ALL", False)
+
+CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+# CSRF
+
+CSRF_TRUSTED_ORIGINS = env.list("ALLOWED_ORIGINS", ['http://localhost:5173'])
+
+CSRF_COOKIE_HTTPONLY = env.bool("HTTPONLY", True)
+
+CSRF_COOKIE_SECURE = env.bool("COOKIE_SECURE", False)
+
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+SESSION_COOKIE_SECURE = env.bool("COOKIE_SECURE", False)
+
+SESSION_COOKIE_HTTPONLY = env.bool("HTTPONLY", True)
 
 # Application definition
 
@@ -57,19 +79,23 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
