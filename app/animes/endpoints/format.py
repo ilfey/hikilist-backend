@@ -4,13 +4,13 @@ from animes import models
 
 
 class FormatSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = models.Format
-    fields = '__all__'
+    class Meta:
+        model = models.Format
+        fields = '__all__'
 
 
 class FormatViewSet(viewsets.ModelViewSet):
-  queryset = models.Format.objects.all()
-  serializer_class = FormatSerializer
-  filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
-  search_fields = ("id", "title",)
+    queryset = models.Format.objects.all()
+    serializer_class = FormatSerializer
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter,)
+    search_fields = ("id", "title",)

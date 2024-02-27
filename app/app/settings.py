@@ -46,7 +46,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # CSRF
 
-CSRF_TRUSTED_ORIGINS = env.list("ALLOWED_ORIGINS", ['http://localhost:5173'])
+CSRF_TRUSTED_ORIGINS = env.list("ALLOWED_ORIGINS", ['http://localhost:5173',])
 
 CSRF_COOKIE_HTTPONLY = env.bool("HTTPONLY", True)
 
@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     
     'accounts.apps.AccountsConfig',
     'animes.apps.AnimesConfig',
+    'stats.apps.StatsConfig',
 ]
 
 REST_FRAMEWORK = {

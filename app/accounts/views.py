@@ -6,6 +6,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from animes.endpoints.anime_user_rate import AnimeUserRateSerializer
+from animes import models as animes_models
+
 # Create your views here.
 
 
@@ -53,4 +61,21 @@ def whoami_view(request):
     if not request.user.is_authenticated:
         return JsonResponse({'isAuthenticated': False})
 
-    return JsonResponse({'username': request.user.username})
+    return JsonResponse({
+        "id": request.user.id,
+        "username": request.user.username,
+    })
+
+
+class UserListView(APIView):
+    def get(self, request, user_id, list_id):
+        if user_id is None:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if list_id == None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        data = animes_models.AnimeUserRate.objects.filter(list=list_id)
+        serializer = AnimeUserRateSerializer(data, many=True)
+
+        return Response(serializer.data)

@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/accounts/", include("accounts.urls")),
     path("api/", include("animes.urls")),
+    path("api/stats/", include("stats.urls")),
 ]
 
 if bool(settings.DEBUG):

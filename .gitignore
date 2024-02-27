@@ -2,6 +2,7 @@
 
 .docker
 .volumes
+.vscode
 
 **/.venv
 **/venv

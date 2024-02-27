@@ -65,7 +65,7 @@ class List(models.Model):
 class AnimeUserRate(models.Model):
     user = models.ForeignKey("accounts.User", on_delete=models.SET_NULL, blank=False, null=True)
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, blank=False, null=False)
-    list = models.OneToOneField(List, on_delete=models.SET_NULL, blank=True, null=True)
+    list = models.ForeignKey(List, on_delete=models.SET_NULL, blank=True, null=True)
     rating = models.PositiveSmallIntegerField(blank=False, null=False)
 
     def __str__(self):
