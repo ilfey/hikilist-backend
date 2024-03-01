@@ -4,8 +4,6 @@ services:
   db:
     container_name: hikilist-postgres
 
-    restart: always
-
     image: postgres:16-alpine
 
     volumes:
@@ -18,29 +16,31 @@ services:
       PGDATA: /etc/pgdata
 
     ports:
-      - "127.0.0.1:55432:5432"
+      - "127.0.0.1:5432:5432"
 
   web:
     container_name: hikilist-web
-
-    restart: always
 
     build: app
     
     env_file:
       - .env.web
 
+    # ports:
+    #   - "${WEB_HOST_PORT}:8000"
+    
+
+
     volumes:
       - "${WEB_MEDIA_PATH}:/srv/app/media"
       - "${WEB_ASSETS_PATH}:/srv/app/assets"
+      - "./app:/srv/app"
     
     depends_on:
       - db
 
   nginx:
     container_name: hikilist-nginx
-
-    restart: always
 
     build: nginx
 
@@ -50,7 +50,7 @@ services:
       - "${NGINX_LOG_PATH}:/var/log/hikilist"
 
     ports:
-      - "55555:80"
+      - "127.0.0.1:8000:80"
 
     depends_on:
       - web

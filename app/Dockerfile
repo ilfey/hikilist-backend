@@ -7,7 +7,7 @@ WORKDIR /srv
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-COPY . .
+COPY . ./app
 
 COPY ./entrypoint.sh .
 
@@ -15,9 +15,7 @@ RUN dos2unix /srv/entrypoint.sh
 
 RUN chmod +x /srv/entrypoint.sh
 
-RUN pip3 install -r requirements.txt --no-cache-dir
-
-RUN python3 manage.py migrate --run-syncdb --noinput
+RUN pip3 install -r app/requirements.txt --no-cache-dir
 
 # CMD [ "python3", "manage.py", "runserver", "0.0.0.0:8000" ]
 

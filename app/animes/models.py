@@ -7,6 +7,9 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ["id"]
 
 
 class Studio(models.Model):
@@ -14,6 +17,9 @@ class Studio(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ["id"]
 
 
 class Format(models.Model):
@@ -21,6 +27,9 @@ class Format(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ["id"]
 
 
 class Anime(models.Model):
@@ -42,6 +51,9 @@ class Anime(models.Model):
     studios = models.ManyToManyField(Studio, blank=True)
     related = models.ManyToManyField("self", blank=True)
 
+    class Meta:
+        ordering = ["id"]
+
     @property
     def status(self):
         if self.episodes_released == 0:
@@ -60,6 +72,9 @@ class List(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        ordering = ["id"]
 
 
 class AnimeUserRate(models.Model):
@@ -70,3 +85,6 @@ class AnimeUserRate(models.Model):
 
     def __str__(self):
         return f"{self.user}, {self.anime}"
+    
+    class Meta:
+        ordering = ["id"]

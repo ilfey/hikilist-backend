@@ -11,17 +11,17 @@ tasks:
   start:
     desc: Start docker compose
     cmds:
-      - docker-compose up
+      - docker-compose -f compose.dev.yaml up
   
   start-detach:
     desc: Start docker compose
     cmds:
-      - docker-compose up --build -d
+      - docker-compose -f compose.dev.yaml up --build -d 
   
   build:
     desc: Build docker compose
     cmds:
-      - docker-compose build
+      - docker-compose -f compose.dev.yaml build
   
   start-local:
     desc: Start backend
