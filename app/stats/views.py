@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.db.models import Count, Avg, Q
+from django.db.models import Count, Avg, Q, OuterRef, Subquery
+from django.db.models.functions import Coalesce
 
 # Create your views here.
 from rest_framework.views import APIView
@@ -12,8 +13,8 @@ from accounts import serializers as accounts_serializers
 
 
 class ListStatsSerializer(serializers.Serializer):
-    id = serializers.IntegerField(source="list__id", read_only=True)
-    title = serializers.CharField(source="list__title", read_only=True)
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField(read_only=True)
     count = serializers.IntegerField(read_only=True)
 
 
@@ -37,9 +38,13 @@ class UserListsStats(APIView):
 
         if user is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        sub = animes_models.AnimeUserRate.objects.filter(user=user_id, list_id=OuterRef("pk")).values("pk").annotate(count = Count("pk", distinct=True))
 
-        lists_stats = animes_models.AnimeUserRate.objects.filter(user=user_id)\
-            .values("list__id", "list__title").annotate(count = Count("anime"))
+        lists_stats = animes_models.List.objects.annotate(count = Coalesce(Subquery(sub.values("count")), 0))
+
+        # lists_stats = animes_models.AnimeUserRate.objects.filter(user=user_id)\
+        #     .values("list__id", "list__title").annotate(count = Count("anime"))
 
         common_stats = animes_models.AnimeUserRate.objects.filter(user=user_id)\
             .aggregate(
