@@ -25,7 +25,7 @@ class CommonStatsSerializer(serializers.Serializer):
 
 
 class UserListsStatsSerializer(serializers.Serializer):
-    account = accounts_serializers.User(read_only=True)
+    account = accounts_serializers.UserSerializer(read_only=True)
     lists = ListStatsSerializer(many=True, read_only=True)
     total = serializers.IntegerField(read_only=True)
     common = CommonStatsSerializer(read_only=True)

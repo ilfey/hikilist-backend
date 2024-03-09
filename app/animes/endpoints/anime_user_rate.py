@@ -3,16 +3,26 @@ from rest_framework import serializers, viewsets, filters
 from animes import models
 from accounts import serializers as accounts_serializers
 
-from . anime import AnimeListItemSerializer
+from .anime import AnimeListItemSerializer
+
 
 class AnimeUserRateSerializer(serializers.ModelSerializer):
-    user = accounts_serializers.User(read_only=True)
+    user = accounts_serializers.UserSerializer(read_only=True)
     anime = AnimeListItemSerializer(read_only=True)
 
     class Meta:
         model = models.AnimeUserRate
-        fields = ["id", "user", "anime", "list", "rating",]
-        read_only_fields = ["id", "user",]
+        fields = [
+            "id",
+            "user",
+            "anime",
+            "list",
+            "rating",
+        ]
+        read_only_fields = [
+            "id",
+            "user",
+        ]
         depth = 1
 
 
