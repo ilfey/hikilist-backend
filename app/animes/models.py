@@ -46,6 +46,22 @@ class Anime(models.Model):
     started = models.DateField(blank=True, null=True)
     released = models.DateField(blank=True, null=True)
 
+    status = models.GeneratedField(
+        expression=models.Case(
+            models.When(
+                episodes_released__isnull=True,
+                then=models.Value("Анонсировано"),
+            ),
+            models.When(
+                models.Q(episodes = models.F("episodes_released")),
+                then=models.Value("Вышло"),
+            ),
+            default=models.Value("Выходит"),
+        ),
+        output_field=models.CharField(max_length=32),
+        db_persist=False,
+    )
+
     format = models.ForeignKey(Format, on_delete=models.SET_NULL, blank=True, null=True)
     genres = models.ManyToManyField(Genre, blank=True)
     studios = models.ManyToManyField(Studio, blank=True)
@@ -53,15 +69,6 @@ class Anime(models.Model):
 
     class Meta:
         ordering = ["id"]
-
-    @property
-    def status(self):
-        if self.episodes_released == 0:
-            return "Анонсировано"
-        elif self.episodes == self.episodes_released:
-            return "Вышло"
-        elif self.episodes != 0 and self.episodes_released != 0:
-            return "Выходит"
 
     def __str__(self):
         return self.title

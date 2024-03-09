@@ -8,7 +8,7 @@ class AnimeListItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Anime
-        fields = ["id", "title", "poster", "episodes", "episodes_released", "genres", "studios", "format",]
+        fields = ("id", "title", "poster", "episodes", "episodes_released", "status", "genres", "studios", "format",)
         depth = 1
     
     def get_poster(self, anime):
@@ -19,19 +19,12 @@ class AnimeListItemSerializer(serializers.ModelSerializer):
 
 
 class AnimeSerializer(serializers.ModelSerializer):
-    poster = serializers.SerializerMethodField()
     related = AnimeListItemSerializer(many=True)
 
     class Meta:
         model = models.Anime
         fields = "__all__"
         depth = 1
-    
-    def get_poster(self, anime):
-        if str(anime.poster).startswith("http"):
-            return str(anime.poster)
-
-        return str(anime.poster.url)
 
 
 class AnimePagination(pagination.PageNumberPagination):
