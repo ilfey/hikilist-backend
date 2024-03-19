@@ -9,16 +9,13 @@ services:
     image: postgres:16-alpine
 
     volumes:
-      - "${DB_DATA_PATH}:/etc/pgdata"
+      - ${DB_DATA_PATH}:/etc/pgdata
 
     environment:
       POSTGRES_DB: $POSTGRES_DB
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       PGDATA: /etc/pgdata
-
-    ports:
-      - "127.0.0.1:55432:5432"
 
   web:
     container_name: hikilist-web
@@ -37,20 +34,5 @@ services:
     depends_on:
       - db
 
-  nginx:
-    container_name: hikilist-nginx
-
-    restart: always
-
-    build: nginx
-
-    volumes:
-      - "${WEB_MEDIA_PATH}:/var/www/hikilist/media"
-      - "${WEB_ASSETS_PATH}:/var/www/hikilist/assets"
-      - "${NGINX_LOG_PATH}:/var/log/hikilist"
-
     ports:
-      - "55555:80"
-
-    depends_on:
-      - web
+      - "${WEB_PORT:-127.0.0.1:8000}:8000"
