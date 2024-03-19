@@ -9,7 +9,7 @@ services:
     image: postgres:16-alpine
 
     volumes:
-      - ${DB_DATA_PATH}:/etc/pgdata
+      - ${DB_DATA_PATH:-.volumes}:/etc/pgdata
 
     environment:
       POSTGRES_DB: $POSTGRES_DB
@@ -28,8 +28,7 @@ services:
       - .env.web
 
     volumes:
-      - "${WEB_MEDIA_PATH}:/srv/app/media"
-      - "${WEB_ASSETS_PATH}:/srv/app/assets"
+      - ./app:/srv/app
     
     depends_on:
       - db

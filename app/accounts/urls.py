@@ -1,15 +1,15 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
+from rest_framework_simplejwt.views import TokenRefreshView
+
 from . import views
 
 urlpatterns = [
-    path("csrf/", views.get_csrf, name="api-csrf"),
-    path("login/", views.login_view, name="api-login"),
-    path("register/", views.register_view, name="api-register"),
-    path("logout/", views.logout_view, name="api-logout"),
-    path("session/", views.session_view, name="api-session"),
-    path("whoami/", views.whoami_view, name="api-whoami"),
+    path("login/", views.LoginView.as_view(), name="api-login"),
+    path("register/", views.RegisterView.as_view(), name="api-register"),
+    path("refresh/", TokenRefreshView.as_view(), name="api-refresh"),
+    path("logout/", views.LogoutView.as_view(), name="api-logout"),
     path(
         "<int:user_id>/list/<int:list_id>/",
         views.UserListView.as_view(),

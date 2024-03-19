@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie, requires_csrf_token
 from django.views.decorators.http import require_POST
 
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -20,108 +23,111 @@ from . import serializers
 
 # Create your views here.
 
+class LoginView(APIView):
+    def post(self, request):
+        serializer = serializers.AuthenticateSerializer(data=request.data)
 
-def get_csrf(request):
-    response = JsonResponse({"detail": "CSRF cookie set"})
-    response["X-CSRFToken"] = get_token(request)
-    return response
+        # Validate body
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-@require_POST
-@requires_csrf_token
-def login_view(request):
-    data = serializers.AuthenticateSerializer(data=json.loads(request.body))
-
-    if not data.is_valid():
-        return JsonResponse(
-            {
-                "errors": data.errors,
-                "detail": "Invalid body.",
-            },
-            status=400,
+        # Get user
+        user = authenticate(
+            username=serializer["username"].value,
+            password=serializer["password"].value,
         )
 
-    user = authenticate(username=data["username"].value, password=data["password"].value)
+        # If user is None then send bad request
+        if not user:
+            return Response({
+                "detail": "Invalid credentials."
+            }, status=status.HTTP_401_UNAUTHORIZEDА)
 
-    if user is None:
-        return JsonResponse({"detail": "Invalid credentials."}, status=400)
+        # Create refresh token
+        refresh = RefreshToken.for_user(user)
 
-    login(request, user)
-    return JsonResponse({"detail": "Successfully logged in."})
-
-
-@require_POST
-@requires_csrf_token
-def register_view(request):
-    data = serializers.AuthenticateSerializer(data=json.loads(request.body))
-
-    if not data.is_valid():
-        return JsonResponse(
-            {
-                "errors": data.errors,
-                "detail": "Invalid body.",
-            },
-            status=400,
-        )
-
-    username = data["username"].value
-    password = data["password"].value
-
-    if models.User.objects.filter(username=username).exists():
-        return JsonResponse({"detail": "Username already exists."}, status=409)
-
-    user = models.User.objects.create_user(
-        username=username,
-        password=password,
-    )
-
-    return JsonResponse(
-        {
-            "id": user.id,
+        # Update payload
+        refresh.payload.update({
+            "user_id": user.id,
             "username": user.username,
-            "detail": "Successfully registered.",
-        }
-    )
+        })
+
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        })
 
 
-def logout_view(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"detail": "You're not logged in."}, status=400)
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = serializers.AuthenticateSerializer(data=request.data)
+        
+        # Validate body
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # If user already exists then return conflict
+        if models.User.objects.filter(username=serializer["username"].value).exists():
+            return Response({
+                "detail": "Username already exists."
+            }, status=status.HTTP_409_CONFLICT)
 
-    logout(request)
+        # Save user
+        user = serializer.save()
 
-    return JsonResponse({"detail": "Successfully logged out."})
+        # Create refresh token
+        refresh = ReferenceError.for_user(user)
+
+        # Update payload
+        refresh.payload.update({
+            "user_id": user.id,
+            "username": user.username,
+        })
+
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }, status=status.HTTP_201_CREATED)
 
 
-# @ensure_csrf_cookie
-def session_view(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"isAuthenticated": False})
+class LogoutView(APIView):
+    def post(self, request):
+        serializer = TokenRefreshSerializer(data=request.data)
 
-    return JsonResponse({"isAuthenticated": True})
+        try:
+            # If body not valid then send bad request
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except TokenError as ex:
+            return Response({
+                "detail": str(ex)
+            }, status=status.HTTP_400_BAD_REQUEST)
 
+        token = RefreshToken(serializer["refresh"].value)
 
-def whoami_view(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"isAuthenticated": False}, status=401)
-
-    return JsonResponse(
-        {
-            "id": request.user.id,
-            "username": request.user.username,
-        }
-    )
-
+        # add token to blacklist
+        token.blacklist()
+            
+        return Response({
+            "detail": "Successfully logged out."
+        })
 
 class UserListView(APIView):
     def get(self, request, user_id, list_id):
-        if user_id is None:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        #  If user_id is None then send bad request
+        if not user_id:
+            return Response({
+                "detail": "Param user_id is required."
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        if list_id == None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        # If list_id is None then send bad request
+        if not list_id:
+            return Response({
+                "detail": "Param list_id is required."
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        data = animes_models.AnimeUserRate.objects.filter(list=list_id)
+        # Filter AnimesUserRate by list and serialize it.
+        data = animes_models.AnimeUserRate.objects.filter(list=list_id)        
         serializer = AnimeUserRateSerializer(data, many=True)
 
         return Response(serializer.data)
