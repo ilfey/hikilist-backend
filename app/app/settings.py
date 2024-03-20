@@ -90,13 +90,15 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.SessionAuthentication',
         "rest_framework_simplejwt.authentication.JWTAuthentication"
     ],
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
 SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=21)
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=21),
+    "TOKEN_OBTAIN_SERIALIZER": "accounts.serializers.ClaimsSerializer",
 }
 
 MIDDLEWARE = [

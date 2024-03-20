@@ -41,16 +41,10 @@ class LoginView(APIView):
         if not user:
             return Response({
                 "detail": "Invalid credentials."
-            }, status=status.HTTP_401_UNAUTHORIZEDА)
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
         # Create refresh token
         refresh = RefreshToken.for_user(user)
-
-        # Update payload
-        refresh.payload.update({
-            "user_id": user.id,
-            "username": user.username,
-        })
 
         return Response({
             "access": str(refresh.access_token),
@@ -76,13 +70,7 @@ class RegisterView(APIView):
         user = serializer.save()
 
         # Create refresh token
-        refresh = ReferenceError.for_user(user)
-
-        # Update payload
-        refresh.payload.update({
-            "user_id": user.id,
-            "username": user.username,
-        })
+        refresh = RefreshToken.for_user(user)
 
         return Response({
             "access": str(refresh.access_token),
@@ -111,6 +99,7 @@ class LogoutView(APIView):
         return Response({
             "detail": "Successfully logged out."
         })
+
 
 class UserListView(APIView):
     def get(self, request, user_id, list_id):

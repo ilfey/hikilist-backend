@@ -1,3 +1,5 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from rest_framework import serializers
 
 from . import models
@@ -8,6 +10,17 @@ class UserSerializer(serializers.ModelSerializer):
         model = models.User
         fields = ["id", "username"]
         read_only_fields = ["id", "username"]
+
+
+class ClaimsSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token["user_id"] = user.id
+        token["username"] = user.username
+
+        return token
 
 
 class AuthenticateSerializer(serializers.Serializer):
