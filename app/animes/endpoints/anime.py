@@ -34,29 +34,23 @@ class AnimePagination(pagination.PageNumberPagination):
     max_page_size = 100000
 
 
-class AnimeFilter(dj_filters.FilterSet):
-    class Meta:
-        model = models.Anime
-        fields = {
-            "episodes": ("gt", "lt",),
-            "episodes_released": ("gt", "lt",),
-            
-            "announcement": ("year__gt", "year__lt",),
-            "started": ("year__gt", "year__lt",),
-            "released": ("year__gt", "year__lt",),
-
-            "genres": ("in",),
-            "format": ("in",),
-            "studios": ("in",),
-        }
-
-
 class AnimeViewSet(viewsets.ModelViewSet):
     queryset = models.Anime.objects.all()
     pagination_class = AnimePagination
     filter_backends = (dj_filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
-    filterset_class = AnimeFilter
     search_fields = ("id", "title", "description",)
+    filterset_fields = {
+        "episodes": ("gt", "lt",),
+        "episodes_released": ("gt", "lt",),
+        
+        "announcement": ("year__gt", "year__lt",),
+        "started": ("year__gt", "year__lt",),
+        "released": ("year__gt", "year__lt",),
+
+        "genres__id": ("in",),
+        "format__id": ("in",),
+        "studios__id": ("in",),
+    }
 
     def get_serializer_class(self):
         if hasattr(self, "action") and self.action == 'list':
