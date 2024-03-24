@@ -1,11 +1,16 @@
 from django.contrib.auth import authenticate
 
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenRefreshSerializer,
+    TokenObtainPairSerializer,
+)
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import TokenError
 
@@ -14,6 +19,34 @@ from accounts.serializers.auth import AuthenticateSerializer
 from accounts import models
 
 
+@extend_schema_view(
+    login=extend_schema(
+        summary="Login into the account",
+        responses={
+            200: TokenObtainPairSerializer,
+        },
+    ),
+    register=extend_schema(
+        summary="Register a new account",
+        responses={
+            200: TokenObtainPairSerializer,
+        },
+    ),
+    logout=extend_schema(
+        summary="Logout from the account",
+        request=TokenRefreshSerializer,
+        responses={
+            200: None
+        }
+    ),
+    refresh=extend_schema(
+        summary="Refresh access token",
+        request=TokenRefreshSerializer,
+        responses={
+            200: TokenRefreshSerializer,
+        },
+    ),
+)
 class AuthViewSet(viewsets.GenericViewSet):
 
     serializer_class = AuthenticateSerializer
@@ -58,10 +91,11 @@ class AuthViewSet(viewsets.GenericViewSet):
 
         # If user already exists then return conflict
         if models.User.objects.filter(username=serializer["username"].value).exists():
-            return Response({
+            return Response(
+                {
                     "detail": "Username already exists.",
                 },
-                status=status.HTTP_409_CONFLICT
+                status=status.HTTP_409_CONFLICT,
             )
 
         # Save user

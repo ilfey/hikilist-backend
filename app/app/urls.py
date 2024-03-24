@@ -19,6 +19,12 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+
 from rest_framework import routers
 
 from . import settings, helpers
@@ -35,16 +41,19 @@ viewsets = (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
 
 # Create router
-router = routers.SimpleRouter()
+root_router = routers.SimpleRouter()
 
 # Register viewsets
-helpers.register_viewsets(router, *viewsets)
+helpers.register_viewsets(root_router, *viewsets)
 
 # Attach router
-urlpatterns += [path("api/", include(router.urls))]
+urlpatterns += [path("api/", include(root_router.urls))]
 
 # urlpatterns += map(lambda pattern animes_urls.router.urls)
 
