@@ -19,18 +19,32 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from . import settings
+from rest_framework import routers
+
+from . import settings, helpers
 
 from animes import urls as animes_urls
+from accounts import urls as accounts_urls
+from schedule import urls as schedule_urls
+
+viewsets = (
+    accounts_urls.viewsets,
+    animes_urls.viewsets,
+    schedule_urls.viewsets,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/accounts/", include("accounts.urls")),
-    path("api/animes/", include("animes.urls")),
-    path("api/", include((animes_urls.router.urls, "animes"), namespace="animes")),
-    path("api/schedule/", include("schedule.urls")),
-    path("api/stats/", include("stats.urls")),
 ]
+
+# Create router
+router = routers.SimpleRouter()
+
+# Register viewsets
+helpers.register_viewsets(router, *viewsets)
+
+# Attach router
+urlpatterns += [path("api/", include(router.urls))]
 
 # urlpatterns += map(lambda pattern animes_urls.router.urls)
 

@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
-urlpatterns = [
-    path('', views.ScheduleAPIView.as_view(), name="schedule"),
+viewsets = [
+    ("schedule", views.ScheduleViewSet, "schedule"),
 ]
+
+urlpatterns = []

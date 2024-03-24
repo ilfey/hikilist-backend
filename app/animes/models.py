@@ -9,6 +9,7 @@ class Genre(models.Model):
         return self.title
     
     class Meta:
+        db_table = "genres"
         ordering = ["id"]
 
 
@@ -19,6 +20,7 @@ class Studio(models.Model):
         return self.title
     
     class Meta:
+        db_table = "studios"
         ordering = ["id"]
 
 
@@ -29,6 +31,7 @@ class Format(models.Model):
         return self.title
     
     class Meta:
+        db_table = "formats"
         ordering = ["id"]
 
 
@@ -77,6 +80,7 @@ class Anime(models.Model):
     related = models.ManyToManyField("self", blank=True)
 
     class Meta:
+        db_table = "animes"
         ordering = ["id"]
 
     def __str__(self):
@@ -90,10 +94,11 @@ class List(models.Model):
         return self.title
     
     class Meta:
+        db_table = "lists"
         ordering = ["id"]
 
 
-class AnimeUserRate(models.Model):
+class Rate(models.Model):
     user = models.ForeignKey("accounts.User", on_delete=models.SET_NULL, blank=False, null=True)
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, blank=False, null=False)
     list = models.ForeignKey(List, on_delete=models.SET_NULL, blank=True, null=True)
@@ -103,4 +108,5 @@ class AnimeUserRate(models.Model):
         return f"{self.user}, {self.anime}"
     
     class Meta:
+        db_table = "rates"
         ordering = ["id"]

@@ -78,11 +78,9 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     
-    'schedule.apps.ScheduleConfig',
-
     'accounts.apps.AccountsConfig',
     'animes.apps.AnimesConfig',
-    'stats.apps.StatsConfig',
+    'schedule.apps.ScheduleConfig',
 ]
 
 REST_FRAMEWORK = {
