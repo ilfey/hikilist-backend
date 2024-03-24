@@ -9,7 +9,7 @@ from rest_framework import status, serializers
 
 from animes import models as animes_models
 from accounts import models as accounts_models
-from accounts import serializers as accounts_serializers
+from accounts.serializers.user import UserListSerializer
 
 
 class ListStatsSerializer(serializers.Serializer):
@@ -25,7 +25,7 @@ class CommonStatsSerializer(serializers.Serializer):
 
 
 class UserListsStatsSerializer(serializers.Serializer):
-    account = accounts_serializers.UserSerializer(read_only=True)
+    account = UserListSerializer(read_only=True)
     lists = ListStatsSerializer(many=True, read_only=True)
     total = serializers.IntegerField(read_only=True)
     common = CommonStatsSerializer(read_only=True)

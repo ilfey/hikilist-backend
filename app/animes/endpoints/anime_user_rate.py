@@ -1,13 +1,13 @@
 from rest_framework import serializers, viewsets, filters
 
 from animes import models
-from accounts import serializers as accounts_serializers
+from accounts.serializers.user import UserListSerializer
 
 from .anime import AnimeListItemSerializer
 
 
 class AnimeUserRateSerializer(serializers.ModelSerializer):
-    user = accounts_serializers.UserSerializer(read_only=True)
+    user = UserListSerializer(read_only=True)
     anime = AnimeListItemSerializer(read_only=True)
 
     class Meta:
