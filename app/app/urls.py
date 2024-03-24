@@ -26,13 +26,15 @@ from . import settings, helpers
 from animes import urls as animes_urls
 from accounts import urls as accounts_urls
 
-viewsets = (accounts_urls.viewsets,)
+viewsets = (
+    accounts_urls.viewsets,
+    animes_urls.viewsets,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # path("api/accounts/", include("accounts.urls")),
     # path("api/animes/", include("animes.urls")),
-    path("api/", include((animes_urls.router.urls, "animes"), namespace="animes")),
     # path("api/schedule/", include("schedule.urls")),
     # path("api/stats/", include("stats.urls")),
 ]

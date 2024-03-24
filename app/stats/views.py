@@ -9,7 +9,7 @@ from rest_framework import status, serializers
 
 from animes import models as animes_models
 from accounts import models as accounts_models
-from accounts.serializers.user import UserListSerializer
+from app.accounts.serializers.users import UserListSerializer
 
 
 class ListStatsSerializer(serializers.Serializer):
