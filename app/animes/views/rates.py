@@ -6,5 +6,5 @@ from animes import models
 
 class RateViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RateListSerializer
-    queryset = models.AnimeUserRate.objects.all()
+    queryset = models.Rate.objects.all()
     filter_backends = (filters.OrderingFilter,)

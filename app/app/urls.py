@@ -25,18 +25,16 @@ from . import settings, helpers
 
 from animes import urls as animes_urls
 from accounts import urls as accounts_urls
+from schedule import urls as schedule_urls
 
 viewsets = (
     accounts_urls.viewsets,
     animes_urls.viewsets,
+    schedule_urls.viewsets,
 )
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path("api/accounts/", include("accounts.urls")),
-    # path("api/animes/", include("animes.urls")),
-    # path("api/schedule/", include("schedule.urls")),
-    # path("api/stats/", include("stats.urls")),
 ]
 
 # Create router

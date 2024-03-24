@@ -52,9 +52,9 @@ class AdminList(admin.ModelAdmin):
     save_on_top = True
 
 
-@admin.register(models.AnimeUserRate)
+@admin.register(models.Rate)
 class AdminAnimeUserRate(admin.ModelAdmin):
-    model = models.AnimeUserRate
+    model = models.Rate
     list_display = ("id", "user", "anime", "list", "rating",)
     list_filter = ("id", "user", "anime", "list", "rating",)
     save_on_top = True

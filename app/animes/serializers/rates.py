@@ -12,7 +12,7 @@ class RateListSerializer(serializers.ModelSerializer):
     anime = AnimeListSerializer(read_only=True)
 
     class Meta:
-        model = models.AnimeUserRate
+        model = models.Rate
         fields = (
             "id",
             "user",
