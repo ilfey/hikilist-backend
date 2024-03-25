@@ -8,12 +8,12 @@ from animes.views.rates import RateViewSet
 from animes.views.studios import StudioViewSet
 
 viewsets = [
-    ("animes", AnimeViewSet, "animes"),
-    ("formats", FormatViewSet, "formats"),
-    ("genres", GenreViewSet, "genres"),
-    ("lists", ListViewSet, "lists"),
-    ("rates", RateViewSet, "rates"),
-    ("studios", StudioViewSet, "studios"),
+    ("v1/animes", AnimeViewSet, "animes"),
+    ("v1/formats", FormatViewSet, "formats"),
+    ("v1/genres", GenreViewSet, "genres"),
+    ("v1/lists", ListViewSet, "lists"),
+    ("v1/rates", RateViewSet, "rates"),
+    ("v1/studios", StudioViewSet, "studios"),
 ]
 
 urlpatterns = []

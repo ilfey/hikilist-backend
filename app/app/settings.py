@@ -116,7 +116,14 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Anime library backend",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SCHEMA_PATH_PREFIX": "/api",
+    "SCHEMA_PATH_PREFIX": "/api/v[0-1]",
+    "SWAGGER_UI_SETTINGS": {
+        "filter": True,
+    },
+    "CONTACT": {
+        "name": "admin",
+        "email": "admin@hikilist.ru",
+    },
 }
 
 SIMPLE_JWT = {
