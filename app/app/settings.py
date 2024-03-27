@@ -116,7 +116,9 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Anime library backend",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_COERCE_PATH_PK_SUFFIX": True,
     "SCHEMA_PATH_PREFIX": "/api/v[0-1]",
+    "COMPONENT_SPLIT_REQUEST": True,
     "SWAGGER_UI_SETTINGS": {
         "filter": True,
     },

@@ -2,12 +2,13 @@ from django.db import models
 
 # Create your models here.
 
+
 class Genre(models.Model):
     title = models.TextField(max_length=256, blank=False, null=False)
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         db_table = "genres"
         ordering = ["id"]
@@ -18,7 +19,7 @@ class Studio(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         db_table = "studios"
         ordering = ["id"]
@@ -29,7 +30,7 @@ class Format(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         db_table = "formats"
         ordering = ["id"]
@@ -85,28 +86,3 @@ class Anime(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class List(models.Model):
-    title = models.TextField(max_length=256, blank=False, null=False)
-
-    def __str__(self):
-        return self.title
-    
-    class Meta:
-        db_table = "lists"
-        ordering = ["id"]
-
-
-class Rate(models.Model):
-    user = models.ForeignKey("accounts.User", on_delete=models.SET_NULL, blank=False, null=True)
-    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, blank=False, null=False)
-    list = models.ForeignKey(List, on_delete=models.SET_NULL, blank=True, null=True)
-    rating = models.PositiveSmallIntegerField(blank=False, null=False)
-
-    def __str__(self):
-        return f"{self.user}, {self.anime}"
-    
-    class Meta:
-        db_table = "rates"
-        ordering = ["id"]
