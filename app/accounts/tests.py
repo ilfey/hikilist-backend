@@ -27,7 +27,7 @@ class BaseTestCase(APITestCase):
 
 
 class RegisterViewTestCase(BaseTestCase):
-    url = reverse('api-register')
+    url = reverse('auth-register')
     
 
     def test_valid(self):
@@ -50,7 +50,7 @@ class RegisterViewTestCase(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
 
 class LoginViewTestCase(BaseTestCase):
-    url = reverse("api-login")
+    url = reverse("auth-login")
 
 
     def test_valid(self):
@@ -89,7 +89,7 @@ class LoginViewTestCase(BaseTestCase):
 
 
 class LogoutViewTestCase(BaseTestCase):
-    url = reverse("api-logout")
+    url = reverse("auth-logout")
 
     def setUp(self):
         super().setUp()
