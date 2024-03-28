@@ -56,4 +56,4 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
         if self.action == "retrieve":
             return AnimeSerializer
 
-        return super().get_serializer(*args, **kwargs)
+        return super().get_serializer_class(*args, **kwargs)
