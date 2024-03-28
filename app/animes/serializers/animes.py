@@ -27,6 +27,9 @@ class AnimeListSerializer(serializers.ModelSerializer):
         )
 
     def get_poster(self, anime):
+        if anime.poster == "":
+            return None
+
         if str(anime.poster).startswith("http"):
             return str(anime.poster)
 
