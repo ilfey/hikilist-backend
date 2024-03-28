@@ -1,10 +1,16 @@
 from rest_framework import serializers
 
 from animes import models
+from .studios import StudioListSerializer
+from .genres import GenreListSerializer
+from .formats import FormatListSerializer
 
 
 class AnimeListSerializer(serializers.ModelSerializer):
     poster = serializers.SerializerMethodField()
+    genres = GenreListSerializer(many=True, read_only=True)
+    studios = StudioListSerializer(many=True, read_only=True)
+    format = FormatListSerializer(read_only=True)
 
     class Meta:
         model = models.Anime
@@ -19,7 +25,6 @@ class AnimeListSerializer(serializers.ModelSerializer):
             "studios",
             "format",
         )
-        depth = 1
 
     def get_poster(self, anime):
         if str(anime.poster).startswith("http"):
@@ -30,8 +35,10 @@ class AnimeListSerializer(serializers.ModelSerializer):
 
 class AnimeSerializer(serializers.ModelSerializer):
     related = AnimeListSerializer(many=True)
+    genres = GenreListSerializer(many=True)
+    studios = StudioListSerializer(many=True)
+    format = FormatListSerializer()
 
     class Meta:
         model = models.Anime
         fields = "__all__"
-        depth = 1

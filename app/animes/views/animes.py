@@ -52,7 +52,7 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
         "studios__id": ("in",),
     }
 
-    def get_serializer(self, *args, **kwargs):
+    def get_serializer_class(self, *args, **kwargs):
         if self.action == "retrieve":
             return AnimeSerializer
 

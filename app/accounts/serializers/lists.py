@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_serializer, extend_schema_field
+from helpers.serializers import CurrentUserIdDefault
 
 from rest_framework import serializers
 
@@ -17,9 +17,10 @@ class ListListSerializer(serializers.ModelSerializer):
 
 class ListSerializer(serializers.ModelSerializer):
     title = serializers.CharField(min_length=3, max_length=256)
-    user = AccountListSerializer(
-        default=serializers.CurrentUserDefault(),
-    )
+
+    user_id = serializers.HiddenField(default=CurrentUserIdDefault())
+    user = AccountListSerializer(read_only=True)
+
     is_primary = serializers.ReadOnlyField(default=False)
 
     class Meta:
