@@ -25,6 +25,7 @@ class RateListSerializer(serializers.ModelSerializer):
             "anime",
             "list",
             "rating",
+            "rewatched",
         )
         read_only_fields = (
             "id",
