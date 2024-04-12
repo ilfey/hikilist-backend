@@ -37,10 +37,20 @@ class AnimeListSerializer(serializers.ModelSerializer):
 
 
 class AnimeSerializer(serializers.ModelSerializer):
+    poster = serializers.SerializerMethodField()
     related = AnimeListSerializer(many=True)
     genres = GenreListSerializer(many=True)
     studios = StudioListSerializer(many=True)
     format = FormatListSerializer()
+
+    def get_poster(self, anime):
+        if anime.poster == "":
+            return None
+
+        if str(anime.poster).startswith("http"):
+            return str(anime.poster)
+
+        return str(anime.poster.url)
 
     class Meta:
         model = models.Anime
