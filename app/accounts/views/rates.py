@@ -51,7 +51,8 @@ class RateViewSet(
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
-        except IntegrityError:
+        except IntegrityError as e:
+            print(e)
             return Response(
                 {
                     "detail": "Rate already exists.",

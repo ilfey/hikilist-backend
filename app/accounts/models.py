@@ -34,12 +34,13 @@ class Rate(models.Model):
         null=True,
     )
     rating = models.PositiveSmallIntegerField(
-        choices=((i, i) for i in range(1, 101)),
-        blank=False,
-        null=False,
+        choices=((i, i) for i in range(1, 6)),
+        blank=True,
+        null=True,
+        default=None,
     )
     rewatched = models.IntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        validators=[MinValueValidator(0)],
         blank=False,
         null=False,
         default=0,
