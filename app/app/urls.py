@@ -27,7 +27,7 @@ from drf_spectacular.views import (
 
 from rest_framework import routers
 
-from . import settings, helpers
+from . import settings, helpers, views
 
 from animes import urls as animes_urls
 from accounts import urls as accounts_urls
@@ -45,6 +45,12 @@ urlpatterns = [
     path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
+
+handler400 = views.bad_request
+handler403 = views.permission_denied
+handler404 = views.not_found
+
+handler500 = views.server_error
 
 # Create router
 root_router = routers.SimpleRouter()
