@@ -44,6 +44,12 @@ class Rate(models.Model):
         null=False,
         default=0,
     )
+    completed = models.IntegerField(
+        validators=[MinValueValidator(0)],
+        blank=True,
+        null=False,
+        default=0,
+    )
 
     def __str__(self):
         return f"{self.user}, {self.anime}"

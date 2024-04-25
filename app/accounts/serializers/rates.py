@@ -26,6 +26,7 @@ class RateListSerializer(serializers.ModelSerializer):
             "list",
             "rating",
             "rewatched",
+            "completed",
         )
         read_only_fields = (
             "id",
@@ -34,7 +35,6 @@ class RateListSerializer(serializers.ModelSerializer):
 
 
 class RateSerializer(serializers.ModelSerializer):
-    user_id = serializers.HiddenField(default=CurrentUserIdDefault())
     user = AccountListSerializer(read_only=True)
 
     anime_id = serializers.PrimaryKeyRelatedField(
@@ -48,6 +48,18 @@ class RateSerializer(serializers.ModelSerializer):
     list = ListListSerializer(read_only=True)
 
     rating = serializers.IntegerField(min_value=1, max_value=5)
+
+    completed = serializers.IntegerField(required=False)
+
+    def create(self, validated_data):
+        data = validated_data.copy()
+
+        data["user"] = self.context["request"].user
+
+        data["anime"] = data.pop("anime_id")
+        data["list"] = data.pop("list_id")
+
+        return super().create(data)
 
     class Meta:
         model = models.Rate
