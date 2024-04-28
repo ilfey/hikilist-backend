@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets, filters, mixins
 
@@ -6,6 +8,26 @@ from accounts import models
 from accounts.serializers.lists import ListListSerializer, ListSerializer
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Get lists",
+    ),
+    retrieve=extend_schema(
+        summary="Get details of lists",
+    ),
+    create=extend_schema(
+        summary="Create new list",
+    ),
+    update=extend_schema(
+        summary="Update list",
+    ),
+    partial_update=extend_schema(
+        summary="Partial update list",
+    ),
+    destroy=extend_schema(
+        summary="Delete list",
+    ),
+)
 class ListViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,

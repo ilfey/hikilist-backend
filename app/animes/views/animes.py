@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 from django_filters import rest_framework as dj_filters
 
 from rest_framework import viewsets, pagination, filters
@@ -11,12 +13,24 @@ from animes import models
 from accounts.models import Rate
 from accounts.serializers.rates import RateSerializer
 
+
 class AnimePagination(pagination.PageNumberPagination):
     page_size = 50
     page_size_query_param = "page_size"
     max_page_size = 100000
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Get animes",
+    ),
+    retrieve=extend_schema(
+        summary="Get details of anime",
+    ),
+    rate_detail=extend_schema(
+        summary="Get rate of anime",
+    ),
+)
 class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AnimeListSerializer
     queryset = models.Anime.objects.all()
@@ -65,7 +79,13 @@ class AnimeViewSet(viewsets.ReadOnlyModelViewSet):
         return super().get_serializer_class(*args, **kwargs)
 
     def get_permissions(self):
-        if self.action in ["create", "update", "partial_update", "destroy", "rate_detail"]:
+        if self.action in [
+            "create",
+            "update",
+            "partial_update",
+            "destroy",
+            "rate_detail",
+        ]:
             return [IsAuthenticated()]
 
         return super().get_permissions()

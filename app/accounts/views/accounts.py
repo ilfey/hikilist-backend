@@ -1,5 +1,7 @@
 from django.db.models import Q
 
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 from rest_framework import viewsets, mixins, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -12,6 +14,38 @@ from accounts.serializers.rates import RateListSerializer
 from accounts.serializers.lists import ListListSerializer
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="List accounts",
+    ),
+    retrieve=extend_schema(
+        summary="Details of accounts",
+    ),
+    accounts_lists_list=extend_schema(
+        summary="Get lists of an account",
+    ),
+    accounts_lists_retrieve=extend_schema(
+        summary="Get details of a list",
+    ),
+    accounts_rates_list=extend_schema(
+        summary="Get rates of an account",
+    ),
+    accounts_rates_retrieve=extend_schema(
+        summary="Get details of a rate",
+    ),
+    logout=extend_schema(
+        summary="Logout from the account",
+    ),
+    refresh=extend_schema(
+        summary="Refresh access token",
+    ),
+    accounts_rates_import=extend_schema(
+        summary="Import rates (Not implemented)",
+        responses={
+            501: "Not implemented",
+        },
+    ),
+)
 class AccountViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,

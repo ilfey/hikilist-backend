@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 from django.db import IntegrityError
 
 from django_filters import rest_framework as dj_filters
@@ -11,6 +13,26 @@ from accounts.serializers.rates import RateListSerializer, RateSerializer
 from accounts import models
 
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="Get rates",
+    ),
+    retrieve=extend_schema(
+        summary="Get details of rate",
+    ),
+    create=extend_schema(
+        summary="Create new rate",
+    ),
+    update=extend_schema(
+        summary="Update rate",
+    ),
+    partial_update=extend_schema(
+        summary="Partial update rate",
+    ),
+    destroy=extend_schema(
+        summary="Delete rate",
+    ),
+)
 class RateViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
